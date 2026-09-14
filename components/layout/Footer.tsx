@@ -24,7 +24,7 @@ export default function Footer() {
             <ul className="mt-3 space-y-1 text-xs text-gray-400">
               <li>happycamerabusiness@gmail.com</li>
               <li>016-320 8864</li>
-              <li>SSM: 202103273052 (K)</li>
+              <li>SSM: 202103273052 (KT0505042-A)</li>
               <li>G-01-12 &amp; 17, Kiara East Suite Dex, Jalan 3/18a, Taman Mastiara, 51200 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur</li>
             </ul>
           </div>
@@ -71,7 +71,7 @@ export default function Footer() {
                   href="/returns"
                   className="text-xs text-gray-400 hover:text-white transition-colors"
                 >
-                  Returns & Refunds
+                  Returns & Exchanges
                 </Link>
               </li>
               <li>

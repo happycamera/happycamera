@@ -71,12 +71,12 @@ export default function TermsPage() {
         </p>
 
         <h2 className="text-[#1A1A1A] font-semibold mt-6">
-          6. Indemnification
+          6. Responsibility for Losses and Damages
         </h2>
         <p>
-          By using our website, you agree to hold Happy Camera harmless from
-          any claims, damages, or losses arising from your use of the site or
-          violation of these Terms.
+          By using our website, you agree to cover and protect Happy Camera
+          from any legal claims, damages, or losses caused by your use of the
+          site or your failure to follow these Terms.
         </p>
 
         <h2 className="text-[#1A1A1A] font-semibold mt-6">
@@ -90,7 +90,7 @@ export default function TermsPage() {
         </p>
 
         <h2 className="text-[#1A1A1A] font-semibold mt-6">
-          8. Inaccuracies, Returns &amp; Refunds
+          8. Inaccuracies, Returns &amp; Exchanges
         </h2>
         <p>
           Occasionally our website may contain typographical errors or
@@ -102,7 +102,7 @@ export default function TermsPage() {
             href="/returns"
             className="underline underline-offset-2 text-[#1A1A1A]"
           >
-            Return and Refund Policy
+            Return and Exchange Policy
           </Link>{" "}
           for how we can help.
         </p>
