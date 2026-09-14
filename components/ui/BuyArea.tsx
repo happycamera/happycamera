@@ -46,7 +46,7 @@ export default function BuyArea({ product, initialStock }: BuyAreaProps) {
         </span>
       </div>
 
-      <div className="mt-8 flex flex-col gap-3">
+      <div className="mt-8 flex flex-col gap-3 max-md:hidden">
         {inStock && <AddToCartButton product={product} />}
       </div>
     </>
