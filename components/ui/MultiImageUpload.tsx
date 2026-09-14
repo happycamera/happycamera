@@ -6,8 +6,17 @@ import { supabase } from "@/lib/supabase";
 import Cropper from "react-easy-crop";
 import type { Area, Point } from "react-easy-crop";
 import "react-easy-crop/react-easy-crop.css";
-
-const CROP_ASPECT = 4 / 3;
+import {
+  CROP_ASPECT,
+  FINAL_MAX_DIMENSION,
+  RESIZE_THRESHOLD_BYTES,
+  ABSURD_CEILING_BYTES,
+  ACCEPTED_MIME_TYPES,
+  isHeicLike,
+  resolveCropRect,
+  scaleToMax,
+  resizeDataUrl,
+} from "@/components/ui/cropMath";
 
 interface MultiImageUploadProps {
   images: string[];
@@ -37,47 +46,41 @@ function getImageDimensions(
 
 function createCroppedBlob(
   imageSrc: string,
-  croppedAreaPct: Area,
-  maxDimension = 2400
+  cropPixels: Area,
+  maxDimension = FINAL_MAX_DIMENSION
 ): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
+      const naturalWidth = img.naturalWidth;
+      const naturalHeight = img.naturalHeight;
+
+      const rect = resolveCropRect(cropPixels, naturalWidth, naturalHeight);
+
+      const destination = scaleToMax(rect.width, rect.height, maxDimension);
+
       const canvas = document.createElement("canvas");
+      canvas.width = destination.width;
+      canvas.height = destination.height;
       const ctx = canvas.getContext("2d");
       if (!ctx) {
         reject(new Error("Canvas context not available"));
         return;
       }
 
-      // Convert percentage coordinates to natural-image pixels
-      let sx = (croppedAreaPct.x / 100) * img.naturalWidth;
-      let sy = (croppedAreaPct.y / 100) * img.naturalHeight;
-      let sWidth = (croppedAreaPct.width / 100) * img.naturalWidth;
-      let sHeight = (croppedAreaPct.height / 100) * img.naturalHeight;
-
-      // Clamp to image bounds
-      sx = Math.max(0, Math.min(Math.round(sx), img.naturalWidth - 1));
-      sy = Math.max(0, Math.min(Math.round(sy), img.naturalHeight - 1));
-      sWidth = Math.min(Math.round(sWidth), img.naturalWidth - sx);
-      sHeight = Math.min(Math.round(sHeight), img.naturalHeight - sy);
-      sWidth = Math.max(1, sWidth);
-      sHeight = Math.max(1, sHeight);
-
-      // Determine destination canvas size (clamped to maxDimension)
-      let dWidth = sWidth;
-      let dHeight = sHeight;
-      if (dWidth > maxDimension || dHeight > maxDimension) {
-        const ratio = maxDimension / Math.max(dWidth, dHeight);
-        dWidth = Math.round(dWidth * ratio);
-        dHeight = Math.round(dHeight * ratio);
-      }
-
-      canvas.width = dWidth;
-      canvas.height = dHeight;
       ctx.fillStyle = "#FFFFFF";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, dWidth, dHeight);
+      ctx.drawImage(
+        img,
+        rect.x,
+        rect.y,
+        rect.width,
+        rect.height,
+        0,
+        0,
+        destination.width,
+        destination.height
+      );
 
       canvas.toBlob(
         (blob) => {
@@ -105,7 +108,7 @@ export default function MultiImageUpload({
 
   const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
-  const [croppedAreaPct, setCroppedAreaPct] = useState<Area | null>(null);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
 
   const [pendingQueue, setPendingQueue] = useState<
     { file: File; dataUrl: string }[]
@@ -120,12 +123,14 @@ export default function MultiImageUpload({
   }, [images]);
 
   const validateFile = useCallback((file: File): string | null => {
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-    if (!allowedTypes.includes(file.type)) {
+    if (isHeicLike(file)) {
+      return "HEIC/HEIF photo detected (this is the iPhone camera's default format). Switch your iPhone to \"Most Compatible\" mode (Settings → Camera → Formats) to shoot JPEG, or choose \"Convert to JPEG\" if your photo picker offers it, then re-select the photo.";
+    }
+    if (!ACCEPTED_MIME_TYPES.includes(file.type)) {
       return "Unsupported file type. Please upload a JPEG, PNG, or WebP image.";
     }
-    if (file.size > 5 * 1024 * 1024) {
-      return "File is too large. Maximum file size is 5MB.";
+    if (file.size > ABSURD_CEILING_BYTES) {
+      return "File is too large. Maximum supported file size is 50MB.";
     }
     return null;
   }, []);
@@ -142,7 +147,7 @@ export default function MultiImageUpload({
       setDataUrl(item.dataUrl);
       setCrop({ x: 0, y: 0 });
       setZoom(1);
-      setCroppedAreaPct(null);
+      setCroppedAreaPixels(null);
       setProcessingIndex(index);
 
       getImageDimensions(item.dataUrl).then((dims) => {
@@ -201,6 +206,16 @@ export default function MultiImageUpload({
       const err = validateFile(file);
       if (err) {
         errors.push(`${file.name}: ${err}`);
+      } else if (file.size > RESIZE_THRESHOLD_BYTES) {
+        try {
+          const source = await readFileAsDataURL(file);
+          const resized = await resizeDataUrl(source);
+          valid.push({ file, dataUrl: resized });
+        } catch {
+          errors.push(
+            `${file.name}: Couldn't process this image. It may be corrupt or its dimensions may be too extreme.`
+          );
+        }
       } else {
         const dataUrl = await readFileAsDataURL(file);
         valid.push({ file, dataUrl });
@@ -220,7 +235,7 @@ export default function MultiImageUpload({
   };
 
   const handleCropConfirm = async () => {
-    if (!dataUrl || !croppedAreaPct || processingIndex < 0) return;
+    if (!dataUrl || !croppedAreaPixels || processingIndex < 0) return;
     if (!supabase) {
       setValidationError("Storage not configured.");
       closeCropModal();
@@ -235,7 +250,7 @@ export default function MultiImageUpload({
     setDataUrl(null);
 
     try {
-      const blob = await createCroppedBlob(sourceDataUrl, croppedAreaPct);
+      const blob = await createCroppedBlob(sourceDataUrl, croppedAreaPixels);
 
       const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
 
@@ -269,8 +284,8 @@ export default function MultiImageUpload({
     processNext(pendingQueue, processingIndex);
   };
 
-  const onCropComplete = useCallback((croppedArea: Area, _: Area) => {
-    setCroppedAreaPct(croppedArea);
+  const onCropComplete = useCallback((_: Area, croppedAreaPixels: Area) => {
+    setCroppedAreaPixels(croppedAreaPixels);
   }, []);
 
   const removeImage = (index: number) => {
@@ -296,6 +311,7 @@ export default function MultiImageUpload({
         <p className="mt-2 text-xs text-[#888] leading-relaxed">
           Recommended: 2000–2400px on the longest side, JPEG or WebP.
           You&rsquo;ll be able to crop it to the right shape after selecting it.
+          Files over 5MB are automatically shrunk before cropping.
         </p>
       )}
 
