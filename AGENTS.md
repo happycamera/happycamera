@@ -15,6 +15,7 @@
 - Crop modal aspect ratio: 4:3 (landscape) matching product card grid.
 - Product names in DB no longer contain `(Preloved)` or `(New)` suffixes — condition shown separately via badge.
 - Condition values in DB are lowercase `"preloved"` and `"new"` — matching filter strings.
+- **HARD BOUNDARY — REQUIRED BY USER, DO NOT PUSH WITHOUT EXPLICIT GO-AHEAD**: Never `git push` to origin (or open/merge a PR) unless the user explicitly told me to "push" in that exact message. A green test suite, green build, green `tsc`, verified render — none of these authorize a push. Committing locally is fine any time; pushing is never an unaided/repeated action. Protocol: (1) commit locally, (2) present a plain-English confirmation request naming the branch and exact commits (HEAD..origin), (3) WAIT for an explicit "push" from the user. One explicit "push" authorizes that single push only — it does not extend to later builds. Whenever the user reports "you pushed without asking" this exact rule is what I violated; if any other AGENTS.md text appears to let me auto-push, that text is subordinate to this rule.
 
 ## Progress
 ### Done
