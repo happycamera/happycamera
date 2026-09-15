@@ -1,8 +1,8 @@
 import { test, expect } from "@playwright/test";
 import { execSync } from "child_process";
 
-const ADMIN_EMAIL = "admin@happycamera.com";
-const ADMIN_PASSWORD = "wilson123";
+const ADMIN_EMAIL = "happycamerabusiness@gmail.com";
+const ADMIN_PASSWORD = "TempPass123!";
 const CUSTOMER_EMAIL = "e2e-customer@happycamera.com";
 const CUSTOMER_PASSWORD = "customer123";
 

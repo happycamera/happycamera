@@ -12,7 +12,7 @@ import {
   X,
   Menu,
 } from "lucide-react";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 
@@ -29,6 +29,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const { data: session } = useSession();
   const [showSignOut, setShowSignOut] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -86,7 +87,7 @@ export default function DashboardLayout({
 
       <div className="p-4 border-t border-white/10">
         <p className="text-[10px] text-white/40 mb-2 truncate">
-          Logged in as admin@happycamera.com
+          Logged in as {session?.user?.email ?? "Admin"}
         </p>
         <button
           onClick={() => setShowSignOut(true)}

@@ -87,7 +87,7 @@
 
 ## Critical Context
 - `prisma db push --accept-data-loss` was used multiple times. No production data exists so this is acceptable.
-- Admin login: `admin@happycamera.com` / `wilson123` at `/admin/login` or `/login`.
+- Admin login: `happycamerabusiness@gmail.com` / temporary password (client will reset via forgot-password; old `admin@happycamera.com`/`wilson123` account deleted) at `/admin/login` or `/login`.
 - WhatsApp number env var: `NEXT_PUBLIC_WHATSAPP_NUMBER`.
 - Image crop: `react-easy-crop` v6, CSS imported as `"react-easy-crop/react-easy-crop.css"`, canvas-to-blob JPEG quality 0.85, max 2400px longest side. Crop aspect 4:3. Default zoom=1 (fill frame). Background `#1A1A1A`.
 - Upload appends to images array via ref: `uploadedInBatchRef.current = [...uploadedInBatchRef.current, urlData.publicUrl]` — old URLs are preserved during batch.
