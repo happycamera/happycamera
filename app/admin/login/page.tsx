@@ -89,7 +89,7 @@ export default function AdminLoginPage() {
         {/* Left panel — image hero */}
         <div className="relative w-full md:w-[60%] h-[35vh] md:h-auto bg-black shrink-0">
         <Image
-          src="/images/login-logo.jpg"
+          src="/images/new-login.jpg"
           alt="Happy Camera — curated gear"
           fill
           sizes="(max-width: 768px) 100vw, 60vw"
