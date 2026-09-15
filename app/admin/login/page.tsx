@@ -98,15 +98,7 @@ export default function AdminLoginPage() {
           quality={80}
         />
         <div className="absolute inset-0 bg-black/40 z-10" />
-        <div className="relative z-20 flex flex-col justify-end h-full p-8 md:p-16 md:pb-20">
-          <div className="w-10 h-1 bg-yellow-400 mb-5" />
-          <h1 className="text-[clamp(1.8rem,5vw,3.5rem)] font-bold tracking-tight text-white leading-[1.15]">
-            Every frame, curated.
-          </h1>
-          <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-yellow-400/70">
-            Happy Camera Admin
-          </p>
-        </div>
+
       </div>
 
       {/* Right panel — form */}
