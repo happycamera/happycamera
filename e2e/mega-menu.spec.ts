@@ -1,6 +1,15 @@
 import { test, expect, type Page, type Locator } from "@playwright/test";
+import { seedCatalog, FIXTURE_MIRRORLESS } from "./catalog";
 
 const BASE = "http://localhost:3000";
+
+test.beforeAll(() => {
+  seedCatalog("create");
+});
+
+test.afterAll(() => {
+  seedCatalog("remove");
+});
 
 function megaMenu(page: Page) {
   return page.locator('[data-mega-menu="true"]').last();
@@ -86,6 +95,6 @@ test.describe("mega menu curated images", () => {
     await menu.locator('a[href*="subcategory=Mirrorless"]').click();
     await page.waitForURL(/subcategory=Mirrorless/);
     await expect(page.locator("a[href^='/product/']").first()).toBeVisible({ timeout: 10000 });
-    await expect(page.getByText("Sony ZV-E10 II").first()).toBeVisible();
+    await expect(page.getByText(FIXTURE_MIRRORLESS, { exact: true }).first()).toBeVisible();
   });
 });

@@ -1,6 +1,15 @@
 import { test, expect } from "@playwright/test";
+import { seedCatalog } from "./catalog";
 
 const BASE = "http://localhost:3000";
+
+test.beforeAll(() => {
+  seedCatalog("create");
+});
+
+test.afterAll(() => {
+  seedCatalog("remove");
+});
 
 // Helper: client-side navigate to /shop via the navbar <a> element (bypasses mega menu overlay)
 async function goToShop(page: import("@playwright/test").Page) {

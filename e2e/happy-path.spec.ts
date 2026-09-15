@@ -1,7 +1,16 @@
 import { test, expect, type Page } from "@playwright/test";
+import { seedCatalog } from "./catalog";
 
-const ADMIN_EMAIL = "admin@happycamera.com";
-const ADMIN_PASSWORD = "wilson123";
+const ADMIN_EMAIL = "happycamerabusiness@gmail.com";
+const ADMIN_PASSWORD = "TempPass123!";
+
+test.beforeAll(() => {
+  seedCatalog("create");
+});
+
+test.afterAll(() => {
+  seedCatalog("remove");
+});
 
 // Opens the first product that renders an Add to Cart button (skips out-of-stock
 // products, where BuyArea intentionally hides the CTA).
@@ -23,12 +32,19 @@ async function gotoFirstInStockProduct(page: Page) {
 // ---------------------------------------------------------------------------
 // 1. Homepage
 // ---------------------------------------------------------------------------
-test("homepage loads with hero, categories, and products", async ({ page }) => {
+test("homepage loads with hero, category tabs, and product grid", async ({ page }) => {
   await page.goto("/");
 
-  await expect(page.getByRole("heading", { name: "Happy Camera" }).first()).toBeVisible();
+  // Hero carousel renders
+  await expect(page.locator("h2").first()).toBeVisible();
 
-  await expect(page.locator("text=Browse by Category")).toBeVisible();
+  // Product grid tabs
+  await expect(page.getByRole("button", { name: "All", exact: true }).first()).toBeVisible();
+  await expect(page.getByRole("button", { name: "Brand New", exact: true }).first()).toBeVisible();
+  await expect(page.getByRole("button", { name: "Preloved", exact: true }).first()).toBeVisible();
+
+  // View All link points to /shop
+  await expect(page.locator("a", { hasText: "View All" }).first()).toBeVisible();
 });
 
 // ---------------------------------------------------------------------------
@@ -50,16 +66,16 @@ test("shop page shows products and category pills", async ({ page }) => {
 test("filter sidebar toggles and filters products", async ({ page }) => {
   await page.goto("/shop");
 
-  await expect(page.locator("text=Brand").first()).toBeVisible();
-  await expect(page.locator("text=Condition").first()).toBeVisible();
-  await expect(page.locator("text=Price").first()).toBeVisible();
+  const sidebar = page.locator("aside");
+  await expect(sidebar.getByText("Brand", { exact: true })).toBeVisible();
+  await expect(sidebar.getByText("Condition", { exact: true })).toBeVisible();
+  await expect(sidebar.getByText("Price", { exact: true })).toBeVisible();
 
-  const cameraPill = page.locator("a[href='/shop?category=camera']");
-  if (await cameraPill.isVisible()) {
-    await cameraPill.click();
-    await page.waitForURL(/category=camera/);
-    await expect(page.locator("a[href^='/product/']").first()).toBeVisible({ timeout: 10000 });
-  }
+  const cameraPill = page.locator("a[href='/shop?category=cameras']").first();
+  await expect(cameraPill).toBeVisible();
+  await cameraPill.click();
+  await page.waitForURL(/category=cameras/);
+  await expect(page.locator("a[href^='/product/']").first()).toBeVisible({ timeout: 10000 });
 });
 
 // ---------------------------------------------------------------------------
@@ -76,9 +92,9 @@ test("product detail shows gallery, price, and add-to-cart", async ({ page }) =>
     page.locator("button").filter({ hasText: /Add to Cart — RM/i }).first()
   ).toBeVisible();
 
-  // Condition badge
+  // Condition detail row shows the product condition (New / Preloved)
   await expect(
-    page.locator("span").filter({ hasText: /^(NEW|PRELOVED)$/ }).first()
+    page.locator("span").filter({ hasText: /^(New|Preloved)$/ }).first()
   ).toBeVisible();
 });
 

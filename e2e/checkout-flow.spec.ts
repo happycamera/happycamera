@@ -1,4 +1,13 @@
 import { test, expect, type Page } from "@playwright/test";
+import { seedCatalog } from "./catalog";
+
+test.beforeAll(() => {
+  seedCatalog("create");
+});
+
+test.afterAll(() => {
+  seedCatalog("remove");
+});
 
 // Opens the first product that renders an Add to Cart button (skips out-of-stock).
 async function gotoFirstInStockProduct(page: Page) {

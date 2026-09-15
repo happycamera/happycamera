@@ -1,7 +1,16 @@
 import { test, expect, type Page } from "@playwright/test";
+import { seedCatalog, FIXTURE_DSLR } from "./catalog";
 
-const ADMIN_EMAIL = "admin@happycamera.com";
-const ADMIN_PASSWORD = "wilson123";
+const ADMIN_EMAIL = "happycamerabusiness@gmail.com";
+const ADMIN_PASSWORD = "TempPass123!";
+
+test.beforeAll(() => {
+  seedCatalog("create");
+});
+
+test.afterAll(() => {
+  seedCatalog("remove");
+});
 
 const UNIQUE = Date.now();
 const VALID_SLUG = `e2e-subcat-valid-${UNIQUE}`;
@@ -78,9 +87,9 @@ test("subcategory options change correctly when category changes", async ({ page
 test("edit form pre-selects an existing product's subcategory", async ({ page }) => {
   await adminLogin(page);
 
-  // Nikon D610 is a Cameras / DSLR product in the seed data.
+  // E2E fixture DSLR product is a Cameras / DSLR product.
   await page.goto("/admin/products");
-  const row = page.locator("tr", { hasText: "Nikon D610" }).first();
+  const row = page.locator("tr", { hasText: FIXTURE_DSLR }).first();
   await row.waitFor({ state: "visible", timeout: 15000 });
   const editHref = await row.locator('a[title="Edit"]').getAttribute("href");
   expect(editHref).toMatch(/^\/admin\/products\/[^/]+\/edit$/);

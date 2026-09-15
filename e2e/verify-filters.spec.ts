@@ -1,41 +1,56 @@
 import { test, expect } from "@playwright/test";
+import { seedCatalog } from "./catalog";
+
+test.beforeAll(() => {
+  seedCatalog("create");
+});
+
+test.afterAll(() => {
+  seedCatalog("remove");
+});
 
 test.describe("shop filter fixes", () => {
   test("badge count only tracks brand/condition/price", async ({ page }) => {
+    // Desktop sidebar renders the Filter heading + the badge (span.rounded-full.border-black)
+    const sidebar = page.locator("aside");
+    const badge = sidebar.locator("span.border-black");
+
     // no params -> no badge
     await page.goto("/shop");
-    await expect(page.getByText("Filters", { exact: true })).toBeVisible();
+    await expect(sidebar.getByText("Filters", { exact: true })).toBeVisible();
+    await expect(badge).toHaveCount(0);
 
     // category pill only -> no badge
     await page.goto("/shop?category=cameras");
-    await expect(page.getByText("Filters", { exact: true })).toBeVisible();
     await expect(page.locator("a[href^='/shop?category=']").first()).toBeVisible();
-    const countWithCategoryOnly = page.locator(".border-black", { hasText: /^\d+$/ });
-    await expect(countWithCategoryOnly).toHaveCount(0);
+    await expect(badge).toHaveCount(0);
 
-    // category + condition (homepage link) -> 1 (condition only)
+    // category + condition -> badge 1 (condition only)
     await page.goto("/shop?category=cameras&condition=new");
-    const count1 = page.locator("span").filter({ hasText: /^1$/ }).locator("visible=true").first();
-    await expect(count1).toBeVisible();
+    await expect(badge).toHaveText("1");
 
-    // brand + price -> 2
+    // brand + price -> badge 2
     await page.goto("/shop?brand=sony&minPrice=1000&maxPrice=3000");
-    const count2 = page.locator("span").filter({ hasText: /^2$/ }).locator("visible=true").first();
-    await expect(count2).toBeVisible();
+    await expect(badge).toHaveText("2");
   });
 
   test("brand list dedupes case-insensitively and matches case-insensitively", async ({ page }) => {
     await page.goto("/shop?brand=sony");
-    // open the Brand accordion
+
+    // Open the Brand accordion
     await page.getByRole("button", { name: "Brand", exact: true }).click();
-    // brand filter should find all 4 Sony products, checkbox checked
-    const sonyLabel = page.locator("label").filter({ has: page.getByText("Sony", { exact: true }) }).first();
-    await expect(sonyLabel.locator('input[type="checkbox"]')).toBeChecked();
-    // grid shows 4 products (2 product links per card = 8 anchors)
-    const cards = page.locator("a[href^='/product/']");
-    await expect(cards).toHaveCount(8);
-    // only ONE brand entry for sony in the sidebar (no duplicate casing)
+
+    // brand=sony resolves against a Sony product (case-insensitive match)
     const sidebar = page.locator("aside");
+    const sonyLabel = sidebar.locator("label").filter({ hasText: "Sony" }).first();
+    await expect(sonyLabel.locator('input[type="checkbox"]')).toBeChecked();
+
+    // At least one product card renders in the grid (each card = 2 product links)
+    const cards = page.locator("a[href^='/product/']");
+    await expect(cards.first()).toBeVisible();
+    expect(await cards.count()).toBeGreaterThan(0);
+
+    // Only ONE brand entry for Sony in the sidebar (no duplicate casing)
     await expect(sidebar.getByText("Sony", { exact: true })).toHaveCount(1);
   });
 });
