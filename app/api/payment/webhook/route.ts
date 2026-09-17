@@ -45,7 +45,7 @@ console.log("CHIP public key check:", {
   contentType: keyResponse.headers.get("content-type"),
 });
 
-publicKeyPem = keyText.trim();
+publicKeyPem = JSON.parse(keyText).trim();
   } catch (error) {
     console.error("CHIP webhook: public key request failed", error);
     return new Response("Unable to retrieve public key", {
