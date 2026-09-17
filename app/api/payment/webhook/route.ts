@@ -39,11 +39,6 @@ export async function POST(request: Request) {
 
   const keyText = await keyResponse.text();
 
-console.log("CHIP public key check:", {
-  first30: keyText.substring(0, 30),
-  length: keyText.length,
-  contentType: keyResponse.headers.get("content-type"),
-});
 
 publicKeyPem = JSON.parse(keyText).trim();
   } catch (error) {
