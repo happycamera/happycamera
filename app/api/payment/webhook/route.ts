@@ -37,7 +37,15 @@ export async function POST(request: Request) {
       });
     }
 
-    publicKeyPem = (await keyResponse.text()).trim();
+  const keyText = await keyResponse.text();
+
+console.log("CHIP public key check:", {
+  first30: keyText.substring(0, 30),
+  length: keyText.length,
+  contentType: keyResponse.headers.get("content-type"),
+});
+
+publicKeyPem = keyText.trim();
   } catch (error) {
     console.error("CHIP webhook: public key request failed", error);
     return new Response("Unable to retrieve public key", {
