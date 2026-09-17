@@ -47,9 +47,11 @@ export async function proxy(req: NextRequest) {
     );
     if (isPublic) return NextResponse.next();
 
-    const token = await getToken({
+const token = await getToken({
   req,
   secret: process.env.NEXTAUTH_SECRET,
+  secureCookie: true,
+});
   secureCookie: true,
 });
     if (!token) {
