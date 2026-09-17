@@ -47,13 +47,16 @@ export async function proxy(req: NextRequest) {
     );
     if (isPublic) return NextResponse.next();
 
-const token = await getToken({
-  req,
-  secret: process.env.NEXTAUTH_SECRET,
-  secureCookie: true,
-});
-  secureCookie: true,
-});
+if (rule) {
+  const token = await getToken({
+    req,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
+
+  if (!token || token.role !== "admin") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+}
     if (!token) {
       const url = req.nextUrl.clone();
       url.pathname = "/admin/login";
