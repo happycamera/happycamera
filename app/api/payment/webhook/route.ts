@@ -19,7 +19,9 @@ export async function POST(request: Request) {
     return new Response("Missing signature", { status: 401 });
   }
 
-  const publicKeyPem = process.env.CHIP_WEBHOOK_PUBLIC_KEY;
+ const publicKeyPem = process.env.CHIP_WEBHOOK_PUBLIC_KEY
+  ?.replace(/\\n/g, "\n")
+  .trim();
   if (!publicKeyPem) {
     console.error("CHIP webhook: CHIP_WEBHOOK_PUBLIC_KEY not configured");
     return new Response("Server configuration error", { status: 500 });
