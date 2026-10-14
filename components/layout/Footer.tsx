@@ -21,12 +21,33 @@ export default function Footer() {
             <h4 className="text-[11px] font-semibold uppercase tracking-widest text-white">
               Contact
             </h4>
-            <ul className="mt-3 space-y-1 text-xs text-gray-400">
-              <li>happycamerabusiness@gmail.com</li>
-              <li>016-320 8864</li>
-              <li>SSM: 202103273052 (KT0505042-A)</li>
-              <li>G-01-12 &amp; 17, Kiara East Suite Dex, Jalan 3/18a, Taman Mastiara, 51200 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur</li>
-            </ul>
+            
+<ul className="mt-3 space-y-1 text-xs text-gray-400">
+  <li>happycamerabusiness@gmail.com</li>
+  <li>SSM: 202103273052 (KT0505042-A)</li>
+
+  <li className="pt-3 font-semibold text-white">
+    HQ - KIARA EAST
+  </li>
+  <li>
+    G-01-12 &amp; 17, Kiara East Suite Dex,
+    Jalan 3/18a, Taman Mastiara,
+    51200 Kuala Lumpur,
+    Wilayah Persekutuan Kuala Lumpur
+  </li>
+  <li>Contact: 016-320 8864</li>
+
+  <li className="pt-3 font-semibold text-white">
+    BRANCH 1 - BERJAYA TIMES SQUARE
+  </li>
+  <li>
+    Lot 06-08, Level 6 East Wing,
+    Berjaya Times Square, 1 Jalan Imbi,
+    55100 Kuala Lumpur
+  </li>
+  <li>Contact: 012-700 8899</li>
+</ul>
+
           </div>
 
           <div>
