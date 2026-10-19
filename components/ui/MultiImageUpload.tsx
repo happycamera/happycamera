@@ -82,14 +82,13 @@ function createCroppedBlob(
         destination.height
       );
 
-      canvas.toBlob(
-        (blob) => {
-          if (blob) resolve(blob);
-          else reject(new Error("Failed to create blob"));
-        },
-        "image/jpeg",
-        0.85
-      );
+     canvas.toBlob(
+  (blob) => {
+    if (blob) resolve(blob);
+    else reject(new Error("Failed to create blob"));
+  },
+  "image/png"
+);
     };
     img.onerror = () => reject(new Error("Failed to load image"));
     img.src = imageSrc;
