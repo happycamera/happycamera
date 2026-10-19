@@ -251,12 +251,11 @@ export default function MultiImageUpload({
     try {
       const blob = await createCroppedBlob(sourceDataUrl, croppedAreaPixels);
 
-      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
-
+      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.png`;
       const { data, error } = await supabase.storage
         .from("camera-images")
         .upload(fileName, blob, {
-          contentType: "image/jpeg",
+          contentType: "image/png",
         });
 
       if (!error && data) {
