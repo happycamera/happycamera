@@ -86,7 +86,7 @@ export function resizeDataUrl(dataUrl: string, max = PRE_RESIZE_MAX): Promise<st
       ctx.fillStyle = "#FFFFFF";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      const out = canvas.toDataURL("image/jpeg", 0.85);
+  const out = canvas.toDataURL("image/png");
       resolve(out);
     };
     img.onerror = () => reject(new Error("Failed to load image for resizing"));
