@@ -1,0 +1,3 @@
+
+ALTER TABLE "Product"
+ADD COLUMN "freeGifts" TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[];
