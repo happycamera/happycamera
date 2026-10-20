@@ -14,7 +14,7 @@ export async function PATCH(
   try {
     const body = await request.json();
     const {
-      name, slug, brand, price, originalPrice, condition, conditionGrade, conditionNotes,
+      name, slug, brand, price, originalPrice, condition, conditionGrade, conditionNotes, variants,
       
 includedAccessories, freeGifts, shutterCount, mount, format, warranty,
 
@@ -57,6 +57,36 @@ includedAccessories, freeGifts, shutterCount, mount, format, warranty,
     const product = await prisma.product.update({
       where: { id },
       data: {
+        ...(Array.isArray(variants) && {
+  variants: {
+    upsert: variants.map((v: {
+      id?: string;
+      color: string;
+      sku?: string | null;
+      price?: number | null;
+      stock: number;
+      images?: string[];
+    }) => ({
+      where: {
+        id: v.id || "__new_variant__",
+      },
+      update: {
+        color: v.color.trim(),
+        sku: v.sku || null,
+        price: v.price ?? null,
+        stock: Number(v.stock),
+        images: v.images ?? [],
+      },
+      create: {
+        color: v.color.trim(),
+        sku: v.sku || null,
+        price: v.price ?? null,
+        stock: Number(v.stock),
+        images: v.images ?? [],
+      },
+    })),
+  },
+}),
         name: name.trim(),
         slug: slug.trim(),
         brand: normalizeBrand(brand),

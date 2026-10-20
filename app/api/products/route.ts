@@ -13,7 +13,7 @@ export async function POST(request: Request) {
    
 includedAccessories, freeGifts, shutterCount, mount, format, warranty,
 
-      stockQuantity, description, categoryId, subcategory, images,
+     stockQuantity, description, categoryId, subcategory, images, variants,
     } = body;
 
     const fields: Record<string, string> = {};
@@ -51,6 +51,23 @@ includedAccessories, freeGifts, shutterCount, mount, format, warranty,
 
     const product = await prisma.product.create({
       data: {
+        variants: {
+  create: Array.isArray(variants)
+    ? variants.map((v: {
+        color: string;
+        sku?: string | null;
+        price?: number | null;
+        stock: number;
+        images?: string[];
+      }) => ({
+        color: v.color.trim(),
+        sku: v.sku || null,
+        price: v.price ?? null,
+        stock: Number(v.stock),
+        images: v.images ?? [],
+      }))
+    : [],
+},
         name: name.trim(),
         slug: slug.trim(),
         brand: normalizeBrand(brand),

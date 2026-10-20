@@ -134,7 +134,7 @@ export default function CartDrawer() {
                           <div className="flex items-center gap-2 mt-2">
                             <div className="flex items-center border border-[var(--color-border)] shrink-0">
                               <button
-                                onClick={() => updateQuantity(item.productId, item.quantity - 1)}
+                                onClick={() => updateQuantity(item.productId, item.quantity - 1, item.variantId)}
                                 className="h-8 w-8 flex items-center justify-center text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
                                 aria-label={`Decrease quantity of ${item.name}`}
                               >
@@ -144,7 +144,7 @@ export default function CartDrawer() {
                                 {item.quantity}
                               </span>
                               <button
-                                onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                                onClick={() => updateQuantity(item.productId, item.quantity + 1, item.variantId)}
                                 disabled={
                                   item.stockQuantity !== undefined &&
                                   item.quantity >= item.stockQuantity
@@ -164,7 +164,7 @@ export default function CartDrawer() {
                           </p>
                         </div>
                         <button
-                          onClick={() => removeFromCart(item.productId)}
+                          onClick={() => removeFromCart(item.productId, item.variantId)}
                           className="p-1.5 text-[var(--color-text-secondary)] hover:text-red-500 transition-colors shrink-0"
                           aria-label={`Remove ${item.name}`}
                         >

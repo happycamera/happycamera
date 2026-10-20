@@ -22,8 +22,8 @@ interface CartContextValue {
   openCart: () => void;
   closeCart: () => void;
   addToCart: (item: CartItem) => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  removeFromCart: (productId: string, variantId?: string) => void;
+  updateQuantity: (productId: string, quantity: number, variantId?: string) => void;
   clearCart: () => void;
 }
 
@@ -80,10 +80,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addToCart = useCallback((item: CartItem) => {
     setItems((prev) => {
-      const existing = prev.find((i) => i.productId === item.productId);
+      const existing = prev.find(
+  (i) =>
+    i.productId === item.productId &&
+    i.variantId === item.variantId
+);
       if (existing) {
         return prev.map((i) =>
-          i.productId === item.productId
+          i.productId === item.productId &&
+i.variantId === item.variantId
             ? { ...i, quantity: i.quantity + 1 }
             : i
         );
@@ -93,24 +98,41 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setLastAddedId((n) => n + 1);
   }, []);
 
-  const removeFromCart = useCallback((productId: string) => {
-    setItems((prev) => prev.filter((i) => i.productId !== productId));
-  }, []);
+  const removeFromCart = useCallback((productId: string, variantId?: string) => {
+  setItems((prev) =>
+    prev.filter(
+      (i) =>
+        !(i.productId === productId && i.variantId === variantId)
+    )
+  );
+}, []);
 
-  const updateQuantity = useCallback((productId: string, quantity: number) => {
-    if (quantity < 1) {
-      setItems((prev) => prev.filter((i) => i.productId !== productId));
-      return;
-    }
-    setItems((prev) =>
-      prev.map((i) => {
-        if (i.productId !== productId) return i;
+  const updateQuantity = useCallback(
+  (productId: string, quantity: number, variantId?: string) => {
+    setItems((prev) => {
+      if (quantity < 1) {
+        return prev.filter(
+          (i) =>
+            !(i.productId === productId && i.variantId === variantId)
+        );
+      }
+
+      return prev.map((i) => {
+        if (i.productId !== productId || i.variantId !== variantId) {
+          return i;
+        }
+
         const clamped =
-          i.stockQuantity !== undefined ? Math.min(i.stockQuantity, quantity) : quantity;
+          i.stockQuantity !== undefined
+            ? Math.min(i.stockQuantity, quantity)
+            : quantity;
+
         return { ...i, quantity: clamped };
-      })
-    );
-  }, []);
+      });
+    });
+  },
+  []
+);
 
   const clearCart = useCallback(() => {
     setItems([]);

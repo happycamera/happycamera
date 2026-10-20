@@ -9,8 +9,16 @@ import { cn } from "@/lib/utils";
 import { CATEGORY_SUBCATEGORIES, isValidSubcategory } from "@/lib/categories";
 
 const CONDITION_GRADES = ["", "MINT", "EXCELLENT", "GOOD", "FAIR"];
-
+type ProductVariantData = {
+  id?: string;
+  color: string;
+  sku: string | null;
+  price: number | null;
+  stock: number;
+  images: string[];
+};
 type ProductFormData = {
+    variants?: ProductVariantData[];
   id: string;
   name: string;
   slug: string;
@@ -134,6 +142,9 @@ const [freeGifts, setFreeGifts] = useState(
   const [format, setFormat] = useState(initialData?.format ?? "");
   const [warranty, setWarranty] = useState(initialData?.warranty ?? "");
   const [stockQty, setStockQty] = useState(initialData ? String(initialData.stockQuantity) : "1");
+  const [variants, setVariants] = useState<ProductVariantData[]>(
+  initialData?.variants ?? []
+);
   const [description, setDescription] = useState(initialData?.description ?? "");
   const [categoryId, setCategoryId] = useState(initialData?.categoryId ?? categories[0]?.id ?? "");
   const [subcategory, setSubcategory] = useState(initialData?.subcategory ?? "");
@@ -190,6 +201,14 @@ const [freeGifts, setFreeGifts] = useState(
       method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+       variants: variants.map((v) => ({
+        id: v.id,
+  color: v.color.trim(),
+  sku: v.sku || null,
+  price: v.price,
+  stock: v.stock,
+  images: v.images,
+})),
         name: name.trim(),
         slug: slug.trim(),
         brand: brand.trim(),
@@ -502,7 +521,61 @@ className={cn("mt-1.5", inpClass("freeGifts"))}
               </p>
             </div>
           </div>
-        </div>
+          <div className={cardBase}>
+  <p className={sectionHeader}>Camera Colours & Stock</p>
+
+  {variants.map((variant, index) => (
+    <div key={index} className="mt-4 flex flex-wrap gap-3">
+      <input
+        type="text"
+        placeholder="Colour (e.g. Black)"
+        value={variant.color}
+        onChange={(e) => {
+          const updated = [...variants];
+          updated[index] = { ...variant, color: e.target.value };
+          setVariants(updated);
+        }}
+      className={inpClass("color")}
+      />
+
+      <input
+        type="number"
+        min="0"
+        placeholder="Stock"
+        value={variant.stock}
+        onChange={(e) => {
+          const updated = [...variants];
+          updated[index] = {
+            ...variant,
+            stock: Number(e.target.value),
+          };
+          setVariants(updated);
+        }}
+        className={inpClass("stock")}
+      />
+
+      <button
+        type="button"
+        onClick={() => setVariants(variants.filter((_, i) => i !== index))}
+      >
+        Remove
+      </button>
+    </div>
+  ))}
+
+  <button
+  type="button"
+  onClick={() =>
+    setVariants([
+      ...variants,
+      { color: "", sku: "", price: null, stock: 0, images: [] },
+    ])
+  }
+  className="mt-4 rounded-lg bg-black px-4 py-2 text-white"
+>
+  + Add Colour
+</button>
+</div>
 
         <div className="flex flex-col gap-6">
           {/* Card 4 — Category */}
@@ -618,6 +691,7 @@ className={cn("mt-1.5", inpClass("freeGifts"))}
             </div>
           </div>
         </div>
+      </div>
       </div>
     </motion.form>
   );

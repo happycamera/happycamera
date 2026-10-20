@@ -83,38 +83,108 @@ export async function POST(request: Request) {
 
     const deliveryCharge = computeDeliveryCharge(method, region);
 
-    const lineItems: { productId: string; quantity: number; name: string; price: number }[] = [];
-
+   const lineItems: {
+  productId: string;
+  variantId?: string;
+  color?: string;
+  quantity: number;
+  name: string;
+  price: number;
+}[] = [];
+const requestedStock = new Map<string, number>();
     for (const item of items) {
-      if (
-        !item ||
-        typeof item.productId !== "string" ||
-        !Number.isInteger(item.quantity) ||
-        item.quantity < 1
-      ) {
-        return NextResponse.json({ error: "Invalid item in cart." }, { status: 400 });
-      }
+  if (
+    !item ||
+    typeof item.productId !== "string" ||
+    !Number.isInteger(item.quantity) ||
+    item.quantity < 1
+  ) {
+    return NextResponse.json(
+      { error: "Invalid item in cart." },
+      { status: 400 }
+    );
+  }
 
-      const product = await prisma.product.findUnique({
-        where: { id: item.productId },
-        select: { id: true, stockQuantity: true, name: true, price: true },
-      });
-      if (!product) {
-        return NextResponse.json({ error: `Product not found.` }, { status: 400 });
-      }
-      if (product.stockQuantity < item.quantity) {
-        return NextResponse.json({
-          error: `"${product.name}" only has ${product.stockQuantity} in stock. Please reduce the quantity.`,
-        }, { status: 400 });
-      }
+  const product = await prisma.product.findUnique({
+    where: { id: item.productId },
+    include: { variants: true },
+  });
 
-      lineItems.push({
-        productId: product.id,
-        quantity: item.quantity,
-        name: product.name,
-        price: product.price,
-      });
+  if (!product) {
+    return NextResponse.json(
+      { error: "Product not found." },
+      { status: 400 }
+    );
+  }
+
+  if (item.variantId) {
+    const variant = product.variants.find(
+      (v) => v.id === item.variantId
+    );
+
+    if (!variant) {
+      return NextResponse.json(
+        { error: `Selected colour for "${product.name}" was not found.` },
+        { status: 400 }
+      );
     }
+
+    const stockKey = `variant:${variant.id}`;
+const totalRequested =
+  (requestedStock.get(stockKey) ?? 0) + item.quantity;
+
+requestedStock.set(stockKey, totalRequested);
+
+if (variant.stock < totalRequested) {
+      return NextResponse.json(
+        {
+          error: `${product.name} (${variant.color}) only has ${variant.stock} in stock.`,
+        },
+        { status: 400 }
+      );
+    }
+
+    lineItems.push({
+      productId: product.id,
+      variantId: variant.id,
+      color: variant.color,
+      quantity: item.quantity,
+      name: `${product.name} - ${variant.color}`,
+      price: variant.price ?? product.price,
+    });
+  } else {
+    if (product.variants.length > 0) {
+      return NextResponse.json(
+        {
+          error: `Please select a colour for "${product.name}" before checkout.`,
+        },
+        { status: 400 }
+      );
+    }
+
+    const stockKey = `product:${product.id}`;
+const totalRequested =
+  (requestedStock.get(stockKey) ?? 0) + item.quantity;
+
+requestedStock.set(stockKey, totalRequested);
+
+if (product.stockQuantity < totalRequested) {
+      return NextResponse.json(
+        {
+          error: `"${product.name}" only has ${product.stockQuantity} in stock. Please reduce the quantity.`,
+        },
+        { status: 400 }
+      );
+    }
+
+    lineItems.push({
+      productId: product.id,
+      quantity: item.quantity,
+      name: product.name,
+      price: product.price,
+    });
+  }
+}
 
     const subtotal = lineItems.reduce(
       (sum: number, item: { price: number; quantity: number }) =>
@@ -138,12 +208,14 @@ export async function POST(request: Request) {
         ? { paymentGateway: "MANUAL_BANK_TRANSFER", paymentProofUrl: receiptUrl }
         : {}),
       items: {
-        create: lineItems.map((item) => ({
-          productId: item.productId,
-          quantity: item.quantity,
-          price: item.price,
-        })),
-      },
+  create: lineItems.map((item) => ({
+    productId: item.productId,
+    variantId: item.variantId ?? null,
+    description: item.color ? `Colour: ${item.color}` : null,
+    quantity: item.quantity,
+    price: item.price,
+  })),
+},
     });
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";

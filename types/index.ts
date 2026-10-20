@@ -28,8 +28,10 @@ export interface ProductCardProps {
   createdAt?: string;
 }
 
-export interface CartItem {
+ export interface CartItem {
   productId: string;
+  variantId?: string;
+  color?: string;
   name: string;
   price: number;
   imageUrl: string;

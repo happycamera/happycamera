@@ -187,7 +187,7 @@ export default function CheckoutPaymentPage() {
       {/* Order summary */}
       <ul className="divide-y divide-[var(--color-border)] border-t border-[var(--color-border)]">
         {items.map((item) => (
-          <li key={item.productId} className="flex items-center justify-between py-4">
+          <li key={`${item.productId}-${item.variantId ?? "default"}`} className="flex items-center justify-between py-4">
             <div className="min-w-0 flex-1">
               <p className="text-sm font-medium text-[var(--color-text-primary)] truncate">
                 {item.name}

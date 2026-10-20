@@ -16,8 +16,9 @@ const getProduct = cache(async (slug: string) => {
   const product = await prisma.product.findUnique({
     where: { slug },
     include: {
-      reviews: { where: { approved: true }, orderBy: { createdAt: "desc" } },
-    },
+  reviews: { where: { approved: true }, orderBy: { createdAt: "desc" } },
+  variants: true,
+},
   });
   return product;
 });
@@ -141,9 +142,10 @@ export default async function ProductPage({
             </div>
 
             <BuyArea
-              product={cartProduct}
-              initialStock={product.stockQuantity}
-            />
+  product={cartProduct}
+  initialStock={product.stockQuantity}
+  variants={product.variants}
+/>
 
             <div className="mt-6">
   <h2 className="text-lg font-bold text-black mb-3">

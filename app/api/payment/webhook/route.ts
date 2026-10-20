@@ -117,37 +117,62 @@ publicKeyPem = JSON.parse(keyText).trim();
   }[] = [];
 
   await prisma.$transaction(async (tx) => {
-    const currentOrder = await tx.order.findFirst({
-      where: {
-        id: order.id,
-        status: { not: "PAID" },
-      },
-      include: {
-        items: true,
-      },
-    });
+  const claimed = await tx.order.updateMany({
+  where: {
+    id: order.id,
+    status: { not: "PAID" },
+  },
+  data: {
+    status: "PAID",
+  },
+});
 
-    if (!currentOrder) return;
+if (claimed.count === 0) return;
 
-    await tx.order.update({
-      where: { id: order.id },
-      data: { status: "PAID" },
-    });
+const currentOrder = await tx.order.findUnique({
+  where: { id: order.id },
+  include: { items: true },
+});
 
-    for (const item of currentOrder.items) {
-      if (!item.productId) continue;
+if (!currentOrder) {
+  throw new Error("Order not found after payment claim");
+}
 
+  for (const item of currentOrder.items) {
+    if (!item.productId) continue;
+
+    if (item.variantId) {
+      const result = await tx.productVariant.updateMany({
+        where: {
+          id: item.variantId,
+          productId: item.productId,
+          stock: { gte: item.quantity },
+        },
+        data: {
+          stock: { decrement: item.quantity },
+        },
+      });
+
+      if (result.count === 0) {
+        const variant = await tx.productVariant.findUnique({
+          where: { id: item.variantId },
+          select: { stock: true, color: true },
+        });
+
+        oversoldItems.push({
+          productId: `${item.productId} (${variant?.color ?? "variant"})`,
+          requested: item.quantity,
+          available: variant?.stock ?? 0,
+        });
+      }
+    } else {
       const result = await tx.product.updateMany({
         where: {
           id: item.productId,
-          stockQuantity: {
-            gte: item.quantity,
-          },
+          stockQuantity: { gte: item.quantity },
         },
         data: {
-          stockQuantity: {
-            decrement: item.quantity,
-          },
+          stockQuantity: { decrement: item.quantity },
         },
       });
 
@@ -164,16 +189,26 @@ publicKeyPem = JSON.parse(keyText).trim();
         });
       }
     }
-  });
-
-  if (oversoldItems.length > 0) {
-    console.error(
-      "CHIP webhook: oversold items",
-      oversoldItems
-    );
   }
 
-  await sendOrderConfirmationEmail({
+  await tx.order.update({
+    where: { id: order.id },
+    data: { status: "PAID" },
+  });
+});
+
+if (oversoldItems.length > 0) {
+  console.error(
+    "URGENT: CHIP payment received but insufficient stock. Manual action required.",
+    {
+      orderId: order.id,
+      orderNumber: order.orderNumber,
+      oversoldItems,
+    }
+  );
+}
+
+    await sendOrderConfirmationEmail({
     to: order.customerEmail,
     customerName: order.customerName,
     orderNumber: order.orderNumber || "",
