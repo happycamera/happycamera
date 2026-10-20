@@ -21,6 +21,7 @@ type ProductFormData = {
   conditionGrade: string | null;
   conditionNotes: string | null;
   includedAccessories: string[];
+  freeGifts: string[];
   shutterCount: number | null;
   mount: string | null;
   format: string | null;
@@ -123,6 +124,11 @@ export default function ProductForm({ categories, initialData }: ProductFormProp
   const [includedAccessories, setIncludedAccessories] = useState(
     initialData?.includedAccessories?.join(", ") ?? ""
   );
+  
+const [freeGifts, setFreeGifts] = useState(
+  initialData?.freeGifts?.join(", ") ?? ""
+);
+
   const [shutterCount, setShutterCount] = useState(initialData?.shutterCount ? String(initialData.shutterCount) : "");
   const [mount, setMount] = useState(initialData?.mount ?? "");
   const [format, setFormat] = useState(initialData?.format ?? "");
@@ -195,6 +201,11 @@ export default function ProductForm({ categories, initialData }: ProductFormProp
         includedAccessories: includedAccessories
           ? includedAccessories.split(",").map((s) => s.trim()).filter(Boolean)
           : [],
+        
+freeGifts: freeGifts
+  ? freeGifts.split(",").map((s) => s.trim()).filter(Boolean)
+  : [],
+
         shutterCount: shutterCount ? parseInt(shutterCount, 10) : null,
         mount: mount || null,
         format: format || null,
@@ -412,6 +423,21 @@ export default function ProductForm({ categories, initialData }: ProductFormProp
                 </p>
                 {errMsg("includedAccessories")}
               </div>
+            
+<div>
+  <label className={labelBase}>🎁 Free Gifts</label>
+  <input
+    type="text"
+    value={freeGifts}
+    onChange={(e) => setFreeGifts(e.target.value)}
+    placeholder="e.g. Camera Bag, 64GB SD Card, Cleaning Kit"
+    className={cn("mt-1.5", inputClass("freeGifts"))}
+  />
+  <p className={helperText}>
+    Separate each free gift with a comma. Leave blank if no free gifts.
+  </p>
+</div>
+
             </div>
           </div>
 
