@@ -15,7 +15,9 @@ export async function PATCH(
     const body = await request.json();
     const {
       name, slug, brand, price, originalPrice, condition, conditionGrade, conditionNotes,
-      includedAccessories, shutterCount, mount, format, warranty,
+      
+includedAccessories, freeGifts, shutterCount, mount, format, warranty,
+
       stockQuantity, description, categoryId, subcategory, images,
     } = body;
 
@@ -64,6 +66,9 @@ export async function PATCH(
         conditionGrade: conditionGrade || null,
         conditionNotes: conditionNotes || null,
         includedAccessories: includedAccessories || [],
+        
+freeGifts: Array.isArray(freeGifts) ? freeGifts : [],
+
         shutterCount: shutterCount ? parseInt(String(shutterCount), 10) : null,
         mount: mount || null,
         format: format || null,
