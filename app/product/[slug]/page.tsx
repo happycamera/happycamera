@@ -9,7 +9,7 @@ import ProductCard from "@/components/ui/ProductCard";
 import { formatPrice } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-
+import ReactMarkdown from "react-markdown";
 export const revalidate = 300;
 
 const getProduct = cache(async (slug: string) => {
@@ -150,9 +150,34 @@ export default async function ProductPage({
     Product Description
   </h2>
 
-  <div className="text-base text-gray-600 leading-7 whitespace-pre-line">
+  <div className="text-base text-gray-600 leading-7 space-y-3">
+  <ReactMarkdown
+    components={{
+      h1: ({ children }) => (
+        <h2 className="text-xl font-bold text-black mt-5 mb-3">
+          {children}
+        </h2>
+      ),
+      h2: ({ children }) => (
+        <h3 className="text-lg font-bold text-black mt-4 mb-2">
+          {children}
+        </h3>
+      ),
+      p: ({ children }) => <p className="mb-3">{children}</p>,
+      strong: ({ children }) => (
+        <strong className="font-bold text-black">{children}</strong>
+      ),
+      ul: ({ children }) => (
+        <ul className="list-disc pl-6 mb-3 space-y-1">{children}</ul>
+      ),
+      ol: ({ children }) => (
+        <ol className="list-decimal pl-6 mb-3 space-y-1">{children}</ol>
+      ),
+    }}
+  >
     {product.description}
-  </div>
+  </ReactMarkdown>
+</div>
 </div>
             <div className="mt-8">
               <div className="flex justify-between py-4 border-b border-[#E5E5E5]">

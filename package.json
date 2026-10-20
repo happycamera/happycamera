@@ -34,6 +34,7 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-easy-crop": "^6.0.2",
+    "react-markdown": "^10.1.0",
     "recharts": "^3.9.2",
     "resend": "^6.14.0",
     "tailwind-merge": "^3.6.0",
