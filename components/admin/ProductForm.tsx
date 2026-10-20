@@ -431,7 +431,7 @@ freeGifts: freeGifts
     value={freeGifts}
     onChange={(e) => setFreeGifts(e.target.value)}
     placeholder="e.g. Camera Bag, 64GB SD Card, Cleaning Kit"
-    className={cn("mt-1.5", inputClass("freeGifts"))}
+    className={cn("mt-1.5", inpClass("freeGifts"))}
   />
   <p className={helperText}>
     Separate each free gift with a comma. Leave blank if no free gifts.
