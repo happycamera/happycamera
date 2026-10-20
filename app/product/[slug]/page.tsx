@@ -145,10 +145,15 @@ export default async function ProductPage({
               initialStock={product.stockQuantity}
             />
 
-            <p className="text-base text-gray-500 mt-6">
-              {product.description}
-            </p>
+            <div className="mt-6">
+  <h2 className="text-lg font-bold text-black mb-3">
+    Product Description
+  </h2>
 
+  <div className="text-base text-gray-600 leading-7 whitespace-pre-line">
+    {product.description}
+  </div>
+</div>
             <div className="mt-8">
               <div className="flex justify-between py-4 border-b border-[#E5E5E5]">
                 <span className="text-base font-medium text-black">Condition</span>
