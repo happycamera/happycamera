@@ -196,6 +196,20 @@ export default async function ProductPage({
                   </ul>
                 </div>
               )}
+              
+{product.freeGifts && product.freeGifts.length > 0 && (
+  <div className="flex justify-between gap-4 py-4 border-b border-[#E5E5E5]">
+    <span className="text-base font-medium text-black">
+      🎁 Free Gifts
+    </span>
+    <ul className="text-base text-gray-500 text-right">
+      {product.freeGifts.map((gift, i) => (
+        <li key={i}>🎁 {gift}</li>
+      ))}
+    </ul>
+  </div>
+)}
+
               <div className="flex justify-between py-4 border-b border-[#E5E5E5]">
                 <span className="text-base font-medium text-black">Warranty</span>
                 <span className="text-base font-medium text-black">
