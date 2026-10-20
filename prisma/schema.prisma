@@ -58,6 +58,7 @@ model Product {
   conditionGrade      ConditionGrade?
   conditionNotes      String?
   includedAccessories String[]
+freeGifts String[] @default([])
   shutterCount        Int?
   images              String[]
   stockQuantity       Int             @default(1)
