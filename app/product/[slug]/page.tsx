@@ -109,7 +109,7 @@ export default async function ProductPage({
       />
       {inStock && <StickyAddToCart product={cartProduct} />}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:pb-12 pb-24">
-       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-0">
   <ProductGalleryBuyArea
     product={cartProduct}
     initialStock={product.stockQuantity}
@@ -118,7 +118,7 @@ export default async function ProductPage({
     name={product.name}
   />
 
-  <div className="flex flex-col">
+ <div className="flex flex-col md:col-start-2 md:row-start-1">
             <p className="text-[11px] font-semibold uppercase tracking-widest text-[#888]">
               {product.brand}
             </p>
