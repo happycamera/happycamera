@@ -42,7 +42,7 @@ export default function ProductGalleryBuyArea({
       ? selectedVariant.images
       : images;
 
- return (
+return (
   <div className="contents">
       <Gallery
         key={selectedVariantId}
@@ -50,13 +50,15 @@ export default function ProductGalleryBuyArea({
         name={name}
       />
 
-      <BuyArea
-        product={product}
-        initialStock={initialStock}
-        variants={variants}
-        selectedVariantId={selectedVariantId}
-        onVariantChange={setSelectedVariantId}
-      />
+     <div className="md:col-start-2 md:row-start-2">
+  <BuyArea
+    product={product}
+    initialStock={initialStock}
+    variants={variants}
+    selectedVariantId={selectedVariantId}
+    onVariantChange={setSelectedVariantId}
+  />
+</div>
    </div>
   );
 }
