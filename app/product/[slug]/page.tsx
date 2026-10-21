@@ -1,8 +1,7 @@
 import { cache } from "react";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import BuyArea from "@/components/ui/BuyArea";
-import Gallery from "@/components/ui/Gallery";
+import ProductGalleryBuyArea from "@/components/ui/ProductGalleryBuyArea";
 import ReviewSection from "@/components/ui/ReviewSection";
 import StickyAddToCart from "@/components/ui/StickyAddToCart";
 import ProductCard from "@/components/ui/ProductCard";
@@ -110,10 +109,16 @@ export default async function ProductPage({
       />
       {inStock && <StickyAddToCart product={cartProduct} />}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:pb-12 pb-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          <Gallery images={product.images} name={product.name} />
+       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+  <ProductGalleryBuyArea
+    product={cartProduct}
+    initialStock={product.stockQuantity}
+    variants={product.variants}
+    images={product.images}
+    name={product.name}
+  />
 
-          <div className="flex flex-col">
+  <div className="flex flex-col">
             <p className="text-[11px] font-semibold uppercase tracking-widest text-[#888]">
               {product.brand}
             </p>
@@ -141,11 +146,6 @@ export default async function ProductPage({
               )}
             </div>
 
-            <BuyArea
-  product={cartProduct}
-  initialStock={product.stockQuantity}
-  variants={product.variants}
-/>
 
             <div className="mt-6">
   <h2 className="text-lg font-bold text-black mb-3">
