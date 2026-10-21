@@ -560,7 +560,25 @@ className={cn("mt-1.5", inpClass("freeGifts"))}
       >
         Remove
       </button>
-    </div>
+   
+<div className="w-full mt-3">
+  <p className="text-sm font-semibold mb-2">
+    Images for {variant.color || "this colour"}
+  </p>
+  <MultiImageUpload
+    images={variant.images ?? []}
+    onChange={(newImages) => {
+      setVariants((current) =>
+        current.map((item, i) =>
+          i === index
+            ? { ...item, images: newImages }
+            : item
+        )
+      );
+    }}
+  />
+</div>
+ </div>
   ))}
 
   <button
