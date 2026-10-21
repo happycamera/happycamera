@@ -42,8 +42,8 @@ export default function ProductGalleryBuyArea({
       ? selectedVariant.images
       : images;
 
-  return (
-    <>
+ return (
+  <div className="contents">
       <Gallery
         key={selectedVariantId}
         images={displayImages}
@@ -57,6 +57,6 @@ export default function ProductGalleryBuyArea({
         selectedVariantId={selectedVariantId}
         onVariantChange={setSelectedVariantId}
       />
-    </>
+   </div>
   );
 }
