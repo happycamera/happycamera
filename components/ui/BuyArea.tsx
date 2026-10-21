@@ -15,6 +15,8 @@ interface BuyAreaProps {
     stock: number;
     images: string[];
   }[];
+  selectedVariantId: string;
+  onVariantChange: (id: string) => void;
 }
 
 const stockPillClass =
@@ -22,11 +24,14 @@ const stockPillClass =
 const conditionPillClass =
   "bg-yellow-400 text-black text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full";
 
-export default function BuyArea({ product, initialStock, variants }: BuyAreaProps) {
+export default function BuyArea({
+  product,
+  initialStock,
+  variants,
+  selectedVariantId,
+  onVariantChange,
+}: BuyAreaProps) {
   const [stock, setStock] = useState(initialStock);
-const [selectedVariantId, setSelectedVariantId] = useState(
-  variants[0]?.id ?? ""
-);
 
 const selectedVariant = variants.find(
   (v) => v.id === selectedVariantId
@@ -59,7 +64,7 @@ const selectedVariant = variants.find(
         <button
           key={variant.id}
           type="button"
-          onClick={() => setSelectedVariantId(variant.id)}
+          onClick={() => onVariantChange(variant.id)}
           disabled={variant.stock === 0}
           className={`rounded-lg border px-4 py-2 text-sm ${
             selectedVariantId === variant.id
