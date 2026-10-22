@@ -1,7 +1,8 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Gallery from "@/components/ui/Gallery";
 import BuyArea from "@/components/ui/BuyArea";
 import type { ProductCardProps } from "@/types";
@@ -29,6 +30,11 @@ export default function ProductGalleryBuyArea({
   images,
   name,
 }: Props) {
+  const [buyAreaTarget, setBuyAreaTarget] = useState<HTMLElement | null>(null);
+
+useEffect(() => {
+  setBuyAreaTarget(document.getElementById("product-buy-area"));
+}, []);
   const [selectedVariantId, setSelectedVariantId] = useState(
     variants[0]?.id ?? ""
   );
@@ -50,7 +56,8 @@ return (
         name={name}
       />
 
-    <div className="md:col-start-2 md:row-start-2">
+ {buyAreaTarget && createPortal(
+  <div className="w-full">
   <BuyArea
     product={product}
     initialStock={initialStock}
@@ -58,7 +65,9 @@ return (
     selectedVariantId={selectedVariantId}
     onVariantChange={setSelectedVariantId}
   />
-</div>
+  </div>,
+  buyAreaTarget
+)}
    </div>
   );
 }

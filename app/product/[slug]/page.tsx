@@ -147,6 +147,8 @@ export default async function ProductPage({
             </div>
 
 
+<div id="product-buy-area" className="mt-5" />
+
             <div className="mt-6">
   <h2 className="text-lg font-bold text-black mb-3">
     Product Description
