@@ -28,7 +28,7 @@ export default function Gallery({ images, name }: Props) {
           alt={name}
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-contain object-center p-6"
+          className="object-contain object-center p-1"
           loading={activeIndex === 0 ? "eager" : "lazy"}
           quality={90}
         />
