@@ -50,7 +50,7 @@ return (
         name={name}
       />
 
-    <div className="md:col-start-2 md:row-start-2">
+  <div className="hidden">
   <BuyArea
     product={product}
     initialStock={initialStock}
