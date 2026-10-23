@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-sm font-bold tracking-tight text-[#FFEB00]">
+            <h3 className="text-xl font-bold tracking-tight text-[#FFEB00]">
               Happy Camera
             </h3>
             <p className="mt-2 text-xs text-gray-400 leading-relaxed">
