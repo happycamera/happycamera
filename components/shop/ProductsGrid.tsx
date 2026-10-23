@@ -28,8 +28,7 @@ export default function ProductsGrid({ products }: Props) {
   };
 
   return (
-    <>
-      <div className="grid grid-cols-3 md:grid-cols-4 gap-x-2 md:gap-x-6 gap-y-10">
+    <><div className="grid grid-cols-2 md:grid-cols-4 gap-x-3 md:gap-x-6 gap-y-10">
         {products.map((product, i) => (
           <div
             key={product.id}
