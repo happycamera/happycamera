@@ -26,12 +26,10 @@ export default function Footer() {
   <li>happycamerabusiness@gmail.com</li>
   <li>SSM: 202103273052 (KT0505042-A)</li>
 
-  <li className="pt-3 font-semibold text-white">
-    HQ - KIARA EAST
-  </li>
+  <h3 className="text-xl font-bold tracking-tight text-[#FFEB00]">
   <li>
     G-01-12 &amp; 17, Kiara East Suite Dex,
-    Jalan 3/18a, Taman Mastiara,
+    Jalan 3/18A, Taman Mastiara,
     51200 Kuala Lumpur,
     Wilayah Persekutuan Kuala Lumpur
   </li>
