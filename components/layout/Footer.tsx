@@ -35,9 +35,9 @@ export default function Footer() {
   </li>
   <li>Contact: 016-320 8864</li>
 
-  <li className="pt-3 font-semibold text-white">
-    BRANCH 1 - BERJAYA TIMES SQUARE
-  </li>
+  <li className="pt-3 text-[11px] font-semibold uppercase tracking-widest text-[#FFEB00]">
+  Happy Camera Berjaya Times Square
+</li>
   <li>
     Lot 06-08, Level 6 East Wing,
     Berjaya Times Square, 1 Jalan Imbi,
