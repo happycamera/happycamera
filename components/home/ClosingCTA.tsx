@@ -22,7 +22,7 @@ export default function ClosingCTA() {
     <section className="bg-[#242424] px-5 py-16 md:px-12 md:py-20">
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 text-center">
-          <p className="mb-3 text-xs font-bold uppercase tracking-[0.3em] text-yellow-400">
+          <p className="mb-3 text-xs font-bold uppercase tracking-[0.3em] text-[#FFEB00]">
             Happy Camera Trading
           </p>
           <h2 className="text-3xl font-bold text-white md:text-5xl">
@@ -49,7 +49,7 @@ export default function ClosingCTA() {
                 />
               </div>
               <div className="p-6">
-                <h3 className="text-xl font-bold text-yellow-400">
+                <h3 className="text-xl font-bold text-[#FFEB00]">
                   {outlet.name}
                 </h3>
                 <p className="mt-2 text-sm text-gray-300">
@@ -63,7 +63,7 @@ export default function ClosingCTA() {
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-5 inline-flex bg-yellow-400 px-5 py-3 text-sm font-bold text-black transition hover:bg-yellow-300"
+                  className="mt-5 inline-flex bg-[#FFEB00] px-5 py-3 text-sm font-bold text-black transition hover:bg-yellow-300"
                 >
                   VIEW LOCATION ↗
                 </Link>
