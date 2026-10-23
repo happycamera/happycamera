@@ -94,7 +94,7 @@ export default function HomepageProductGrid({
               variants={reduced ? undefined : staggerVariants}
               initial={reduced ? false : "hidden"}
               animate={reduced ? undefined : "visible"}
-              className="grid grid-cols-3 md:grid-cols-4 gap-3 md:gap-6"
+              className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6"
             >
               <AnimatePresence>
                 {filtered.map((product, index) => (
