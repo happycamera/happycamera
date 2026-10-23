@@ -2,18 +2,20 @@
 import Image from "next/image";
 import Link from "next/link";
 
+
 const outlets = [
   {
     name: "Happy Camera HQ",
     image: "/images/outlet-hq.jpg",
-    location: "Happy Camera Headquarters",
+    location: "",
   },
   {
-    name: "Berjaya Times Square",
+    name: "Happy Camera Berjaya Times Square",
     image: "/images/outlet-berjaya-times-square.jpeg",
-    location: "Lot 06-08, Level 6, East Wing, Kuala Lumpur",
+    location: "",
   },
 ];
+
 
 export default function ClosingCTA() {
   return (
