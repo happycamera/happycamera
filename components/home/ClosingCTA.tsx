@@ -19,7 +19,7 @@ const outlets = [
 
 export default function ClosingCTA() {
   return (
-    <section className="bg-[#101010] px-5 py-16 md:px-12 md:py-20">
+    <section className="bg-[#242424] px-5 py-16 md:px-12 md:py-20">
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 text-center">
           <p className="mb-3 text-xs font-bold uppercase tracking-[0.3em] text-yellow-400">
