@@ -1,5 +1,5 @@
 export const CROP_ASPECT = 1;
-export const FINAL_MAX_DIMENSION = 2400;
+export const FINAL_MAX_DIMENSION = 1200;
 export const RESIZE_THRESHOLD_BYTES = 5 * 1024 * 1024;
 export const ABSURD_CEILING_BYTES = 50 * 1024 * 1024;
 export const PRE_RESIZE_MAX = 2400;
