@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-sm font-bold tracking-tight text-white">
+            <h3 className="text-sm font-bold tracking-tight text-[#FFEB00]">
               Happy Camera
             </h3>
             <p className="mt-2 text-xs text-gray-400 leading-relaxed">
@@ -18,7 +18,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-[11px] font-semibold uppercase tracking-widest text-white">
+            <h4 className="text-[11px] font-semibold uppercase tracking-widest text-[#FFEB00]">
               Contact
             </h4>
             
@@ -51,7 +51,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-[11px] font-semibold uppercase tracking-widest text-white">
+            <h4 className="text-[11px] font-semibold uppercase tracking-widest text-[#FFEB00]">
               Info
             </h4>
             <ul className="mt-3 space-y-1.5">
