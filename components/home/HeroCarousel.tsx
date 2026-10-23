@@ -87,7 +87,7 @@ export default function HeroCarousel() {
 
   return (
     <section
-      className="relative z-10 w-full h-[300px] md:h-auto md:aspect-[21/9] overflow-hidden group"
+     className="relative z-10 w-full h-[400px] md:h-auto md:aspect-[21/9] overflow-hidden group"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
