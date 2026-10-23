@@ -108,7 +108,7 @@ export default function ProductCard({
               alt={name}
               fill
               sizes="(max-width: 768px) 50vw, 25vw"
-              className="object-contain object-center p-2"
+             className="object-contain object-center p-0 md:p-2"
               priority={false}
             />
           ) : (
