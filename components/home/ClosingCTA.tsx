@@ -37,7 +37,7 @@ export default function ClosingCTA() {
           {outlets.map((outlet) => (
             <div
               key={outlet.name}
-              className="overflow-hidden rounded-lg border border-[#333] bg-[#1b1b1b]"
+              className="overflow-hidden rounded-lg border border-[#444444] bg-[#303030]"
             >
               <div className="relative aspect-[4/3] w-full">
                 <Image
