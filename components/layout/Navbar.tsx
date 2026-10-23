@@ -157,7 +157,7 @@ const Navbar = ({ navMenus }: { navMenus: MegaMenuItem[] }) => {
           transition={{ duration: 0.35, ease: "easeOut" }}
           style={{ willChange: "transform" }}
         >
-          <nav className="bg-yellow-400 border-b border-black/10">
+          <nav className="bg-[#FFEB00] border-b border-black/10">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-20 grid grid-cols-3 items-center">
               <div className="flex items-center justify-start gap-6">
                 <div className="flex items-center md:hidden">
