@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ZoomIn, X, Plus, Minus } from "lucide-react";
 import Image from "next/image";
 
@@ -13,6 +13,9 @@ export default function Gallery({ images, name }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isZoomOpen, setIsZoomOpen] = useState(false);
 const [zoomLevel, setZoomLevel] = useState(1);
+  const [isHovering, setIsHovering] = useState(false);
+const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
+const imageContainerRef = useRef<HTMLDivElement>(null);
 
 useEffect(() => {
   if (!isZoomOpen) return;
@@ -53,8 +56,20 @@ useEffect(() => {
   }
 
   return (
-    <div className="flex flex-col gap-3 min-w-0">
-      <div className="w-full aspect-square md:h-[480px] bg-[#f5f5f5] relative flex items-center justify-center overflow-hidden rounded-[2px]">
+   <div className="relative flex flex-col gap-3 min-w-0">
+     <div
+  ref={imageContainerRef}
+  className="w-full aspect-square md:h-[480px] bg-[#f5f5f5] relative flex items-center justify-center overflow-hidden rounded-[2px]"
+  onMouseEnter={() => setIsHovering(true)}
+  onMouseLeave={() => setIsHovering(false)}
+  onMouseMove={(event) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    setMousePosition({
+      x: Math.max(0, Math.min(100, ((event.clientX - rect.left) / rect.width) * 100)),
+      y: Math.max(0, Math.min(100, ((event.clientY - rect.top) / rect.height) * 100)),
+    });
+  }}
+>
         <Image
           src={validImages[activeIndex] || validImages[0]}
           alt={name}
@@ -75,9 +90,28 @@ useEffect(() => {
 >
   <ZoomIn size={22} />
 </button>
-      </div>
-
-      {validImages.length > 1 && (
+    
+      {isHovering && (
+  <div
+    className="hidden md:block absolute z-30 w-[200px] h-[200px] border-2 border-gray-500 bg-white/20 pointer-events-none"
+    style={{
+      left: `calc(${mousePosition.x}% - 100px)`,
+      top: `calc(${mousePosition.y}% - 100px)`,
+    }}
+  />
+)}
+</div>
+     {isHovering && (
+  <div
+    className="hidden lg:block absolute left-[102%] top-0 z-50 w-[400px] h-[400px] border-2 border-gray-400 bg-white shadow-xl pointer-events-none"
+    style={{
+      backgroundImage: `url("${validImages[activeIndex] || validImages[0]}")`,
+      backgroundSize: "250%",
+      backgroundPosition: `${mousePosition.x}% ${mousePosition.y}%`,
+      backgroundRepeat: "no-repeat",
+    }}
+  />
+)} {validImages.length > 1 && (
         <div className="flex gap-2 overflow-x-auto pb-1">
           {validImages.map((img, i) => (
             <button
