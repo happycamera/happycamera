@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { ZoomIn, X, Plus, Minus } from "lucide-react";
 import Image from "next/image";
 
 interface Props {
@@ -10,11 +11,42 @@ interface Props {
 
 export default function Gallery({ images, name }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isZoomOpen, setIsZoomOpen] = useState(false);
+const [zoomLevel, setZoomLevel] = useState(1);
+
+useEffect(() => {
+  if (!isZoomOpen) return;
+
+  const handleEscape = (event: KeyboardEvent) => {
+    if (event.key === "Escape") {
+      setIsZoomOpen(false);
+      setZoomLevel(1);
+    }
+  };
+
+  window.addEventListener("keydown", handleEscape);
+  return () => window.removeEventListener("keydown", handleEscape);
+}, [isZoomOpen]);
   const validImages = images.filter((img) => img.startsWith("https://"));
 
   if (validImages.length === 0) {
     return (
-      <div className="w-full aspect-square md:h-[480px] bg-[#f5f5f5] flex items-center justify-center rounded-[2px]">
+     <div
+  className="w-full aspect-square md:h-[480px] bg-[#f5f5f5] relative flex items-center justify-center overflow-hidden rounded-[2px] cursor-zoom-in"
+  role="button"
+  tabIndex={0}
+  aria-label="Enlarge product image"
+  onClick={() => {
+    setZoomLevel(1);
+    setIsZoomOpen(true);
+  }}
+  onKeyDown={(event) => {
+    if (event.key === "Enter") {
+      setZoomLevel(1);
+      setIsZoomOpen(true);
+    }
+  }}
+>
         <span className="text-xs text-gray-400 uppercase tracking-widest">No image</span>
       </div>
     );
@@ -31,7 +63,18 @@ export default function Gallery({ images, name }: Props) {
           className="object-contain object-center p-1"
           loading={activeIndex === 0 ? "eager" : "lazy"}
           quality={90}
-        />
+        /><button
+  type="button"
+  onClick={(event) => {
+    event.stopPropagation();
+    setZoomLevel(1);
+    setIsZoomOpen(true);
+  }}
+  className="absolute bottom-4 right-4 z-10 rounded-full bg-white p-3 shadow-md hover:bg-gray-100"
+  aria-label="Zoom product image"
+>
+  <ZoomIn size={22} />
+</button>
       </div>
 
       {validImages.length > 1 && (
@@ -60,6 +103,61 @@ export default function Gallery({ images, name }: Props) {
           ))}
         </div>
       )}
+    {isZoomOpen && (
+  <div
+    className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 p-4"
+    onClick={() => setIsZoomOpen(false)}
+    role="dialog"
+    aria-modal="true"
+    aria-label="Enlarged product image"
+  >
+    <button
+      type="button"
+      onClick={() => setIsZoomOpen(false)}
+      className="absolute right-5 top-5 z-20 rounded-full bg-white p-3 text-black"
+      aria-label="Close zoom"
+    >
+      <X size={24} />
+    </button>
+
+    <div
+      className="relative h-[80vh] w-full max-w-5xl overflow-auto"
+      onClick={(event) => event.stopPropagation()}
+    >
+      <Image
+        src={validImages[activeIndex] || validImages[0]}
+        alt={name}
+        fill
+        sizes="100vw"
+        className="object-contain"
+        quality={100}
+      />
     </div>
-  );
+
+    <div
+      className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 gap-3"
+      onClick={(event) => event.stopPropagation()}
+    >
+      <button
+        type="button"
+        onClick={() => setZoomLevel(Math.max(1, zoomLevel - 0.5))}
+        className="rounded-full bg-white p-3 text-black"
+        aria-label="Zoom out"
+      >
+        <Minus size={22} />
+      </button>
+
+      <button
+        type="button"
+        onClick={() => setZoomLevel(Math.min(3, zoomLevel + 0.5))}
+        className="rounded-full bg-white p-3 text-black"
+        aria-label="Zoom in"
+      >
+        <Plus size={22} />
+      </button>
+    </div>
+    </div>
+)}
+</div>
+);
 }
