@@ -12,8 +12,7 @@ export default function Footer() {
               Happy Camera
             </h3>
             <p className="mt-2 text-xs text-gray-400 leading-relaxed">
-              Secondhand and new camera gear, focused on making
-              customers happy. Based in Kuala Lumpur, Malaysia.
+              Happy Camera specialises in brand-new and preloved cameras, lenses, and accessories services. Proudly serving photography enthusiasts across Malaysia.
             </p>
           </div>
 
