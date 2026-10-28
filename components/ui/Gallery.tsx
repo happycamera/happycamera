@@ -80,6 +80,7 @@ useEffect(() => {
           className="object-contain object-center p-1"
           loading={activeIndex === 0 ? "eager" : "lazy"}
           quality={90}
+          unoptimized
         /><button
   type="button"
   onClick={(event) => {
@@ -132,6 +133,7 @@ useEffect(() => {
                 height={64}
                 sizes="64px"
                 quality={80}
+                unoptimized
                 className="w-full h-full object-cover object-center"
                 loading="lazy"
               />
@@ -166,6 +168,7 @@ useEffect(() => {
   fill
   sizes="100vw"
   quality={100}
+       unoptimized
   className="object-contain"
   style={{
     transform: `scale(${zoomLevel})`,
