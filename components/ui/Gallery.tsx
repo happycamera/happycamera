@@ -30,7 +30,9 @@ useEffect(() => {
   window.addEventListener("keydown", handleEscape);
   return () => window.removeEventListener("keydown", handleEscape);
 }, [isZoomOpen]);
-  const validImages = images.filter((img) => img.startsWith("https://"));
+  const validImages = images.filter(
+  (img) => typeof img === "string" && (img.startsWith("https://") || img.startsWith("http://") || img.startsWith("/"))
+);
 
   if (validImages.length === 0) {
     return (
