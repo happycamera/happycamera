@@ -157,9 +157,9 @@ useEffect(() => {
     </button>
 
     <div
-      className="relative h-[80vh] w-full max-w-5xl overflow-auto"
-      onClick={(event) => event.stopPropagation()}
-    >
+  className="relative w-full max-w-5xl h-[80vh] overflow-hidden"
+  onClick={(event) => event.stopPropagation()}
+>
      <Image
   src={validImages[activeIndex] || validImages[0]}
   alt={name}
