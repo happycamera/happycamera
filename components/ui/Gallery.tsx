@@ -158,14 +158,18 @@ useEffect(() => {
       className="relative h-[80vh] w-full max-w-5xl overflow-auto"
       onClick={(event) => event.stopPropagation()}
     >
-      <Image
-        src={validImages[activeIndex] || validImages[0]}
-        alt={name}
-        fill
-        sizes="100vw"
-        className="object-contain"
-        quality={100}
-      />
+     <Image
+  src={validImages[activeIndex] || validImages[0]}
+  alt={name}
+  fill
+  sizes="100vw"
+  quality={100}
+  className="object-contain"
+  style={{
+    transform: `scale(${zoomLevel})`,
+    transformOrigin: "center center",
+  }}
+/>
     </div>
 
     <div
