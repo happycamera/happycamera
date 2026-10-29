@@ -46,7 +46,7 @@ export default function ClosingCTA() {
   fill
   sizes="(max-width: 768px) 100vw, 50vw"
   unoptimized
-  className="object-cover"
+  className={outlet.name === "Happy Camera Berjaya Times Square" ? "object-contain" : "object-cover"}
 />
               </div>
               <div className="p-6">
