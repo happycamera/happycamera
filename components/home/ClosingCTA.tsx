@@ -1,5 +1,4 @@
 
-import Image from "next/image";
 import Link from "next/link";
 
 
@@ -40,13 +39,10 @@ export default function ClosingCTA() {
               className="overflow-hidden rounded-lg border border-[#444444] bg-[#303030]"
             >
               <div className="relative aspect-[4/3] w-full">
-               <Image
+               <img
   src={outlet.image}
   alt={outlet.name}
-  fill
-  sizes="(max-width: 768px) 100vw, 50vw"
-  ununoptimized
-className="object-cover"
+  className="absolute inset-0 h-full w-full object-cover"
 />
 </div>
               <div className="p-6">
