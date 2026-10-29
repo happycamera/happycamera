@@ -40,13 +40,14 @@ export default function ClosingCTA() {
               className="overflow-hidden rounded-lg border border-[#444444] bg-[#303030]"
             >
               <div className="relative aspect-[4/3] w-full">
-                <Image
-                  src={outlet.image}
-                  alt={outlet.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover"
-                />
+               <Image
+  src={outlet.image}
+  alt={outlet.name}
+  fill
+  sizes="(max-width: 768px) 100vw, 50vw"
+  unoptimized
+  className="object-cover"
+/>
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-bold text-[#FFEB00]">
