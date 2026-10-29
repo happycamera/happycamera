@@ -11,7 +11,7 @@ const outlets = [
   },
   {
     name: "Happy Camera Berjaya Times Square",
-    image: "/images/outlet-berjaya-times-square.jpeg",
+   image: "/images/Bright Happy Camera Storefront (1).png",
     location: "",
   },
 ];
