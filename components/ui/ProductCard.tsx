@@ -104,13 +104,14 @@ export default function ProductCard({
         <Link href={`/product/${slug}`} className="relative block w-full h-full flex items-center justify-center">
           {imageUrl ? (
             <Image
-              src={imageUrl}
-              alt={name}
-              fill
-              sizes="(max-width: 768px) 50vw, 25vw"
-             className="object-contain object-center p-0 md:p-2"
-              priority={false}
-            />
+  src={imageUrl}
+  alt={name}
+  fill
+  sizes="(max-width: 768px) 50vw, 25vw"
+  unoptimized
+  className="object-contain object-center p-0 md:p-2"
+  priority={false}
+/>
           ) : (
             <span className="text-xs text-gray-400">No image</span>
           )}
