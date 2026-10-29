@@ -45,9 +45,10 @@ export default function ClosingCTA() {
   alt={outlet.name}
   fill
   sizes="(max-width: 768px) 100vw, 50vw"
-  unoptimized
-  className="object-cover"
-              </div>
+  ununoptimized
+className="object-cover"
+/>
+</div>
               <div className="p-6">
                 <h3 className="text-xl font-bold text-[#FFEB00]">
                   {outlet.name}
